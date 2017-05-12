@@ -1,4 +1,6 @@
-# Spring Cloud Sleuth LightStep Instrumentation Example
+# Spring Cloud OpenTracing (LightStep) Instrumentation Example
+
+OpenTracing (LightStep) instrumentation for Spring Cloud based on  Spring Cloud Sleuth
 
 Example consists of:
 - Eureka Server
