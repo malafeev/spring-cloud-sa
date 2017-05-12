@@ -9,7 +9,7 @@ Example consists of:
 
 Rest services are registered in Eureka on startup.
 
-Service 2 make rest request to Service 1 via Feign client which uses Service Discovery, Circuit Breaker (Hystrix) 
+_Service 2_ make rest request to _Service 1_ via Feign client which uses Service Discovery, Circuit Breaker (Hystrix) 
 and Client Side Load Balancer (Ribbon)
 
 ## Configuration
