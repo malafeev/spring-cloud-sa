@@ -1,7 +1,10 @@
 package com.lightstep;
 
 import com.lightstep.tracer.jre.JRETracer;
-import io.opentracing.util.GlobalTracer;
+import io.opentracing.Tracer;
+import java.net.MalformedURLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.sleuth.Sampler;
 import org.springframework.cloud.sleuth.SpanReporter;
@@ -12,58 +15,60 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-
 @Configuration
 @PropertySource("classpath:lightstep.properties")
 public class LightStepConfiguration {
 
-    @Value("${lightstep.access_token}")
-    private String accessToken;
+  private static final Logger logger = LoggerFactory.getLogger(LightStepConfiguration.class);
 
-    @Value("${lightstep.component_name}")
-    private String componentName;
+  @Value("${lightstep.access_token}")
+  private String accessToken;
 
-    @Value("${lightstep.collector_host}")
-    private String host;
+  @Value("${lightstep.component_name}")
+  private String componentName;
 
-    @Value("${lightstep.collector_port}")
-    private int port;
+  @Value("${lightstep.collector_host}")
+  private String host;
 
-    @PostConstruct
-    public void lightStepTracer() throws IOException {
-        JRETracer tracer = new JRETracer(
-                new com.lightstep.tracer.shared.Options.OptionsBuilder()
-                        .withAccessToken(accessToken)
-                        .withComponentName(componentName)
-                        .withCollectorHost(host)
-                        .withCollectorPort(port)
-                        .withDisableReportingLoop(true) //TODO: remove
-                        .build()
-        );
-        GlobalTracer.register(tracer);
+  @Value("${lightstep.collector_port}")
+  private int port;
+
+  @Bean
+  public Tracer lightStepTracer() {
+    try {
+      return new JRETracer(
+          new com.lightstep.tracer.shared.Options.OptionsBuilder()
+              .withAccessToken(accessToken)
+              .withComponentName(componentName)
+              .withCollectorHost(host)
+              .withCollectorPort(port)
+              .build()
+      );
+    } catch (MalformedURLException e) {
+      logger.error("Failed to init tracer", e);
     }
 
+    return null;
+  }
 
-    @Bean
-    public Sampler defaultSampler() {
-        return new AlwaysSampler();
-    }
+  @Bean
+  public Sampler defaultSampler() {
+    return new AlwaysSampler();
+  }
 
-    @Bean
-    public SpanReporter spanReporter() {
-        return new LightStepSpanReporter();
-    }
+  @Bean
+  public SpanReporter spanReporter() {
+    return new LightStepSpanReporter(lightStepTracer());
+  }
 
-    @Bean
-    public HttpSpanInjector lightStepHttpSpanInjector() {
-        return new LightStepHttpSpanInjector();
-    }
+  @Bean
+  public HttpSpanInjector lightStepHttpSpanInjector() {
+    return new LightStepHttpSpanInjector();
+  }
 
-    @Bean
-    public HttpSpanExtractor lightStepHttpSpanExtractor() {
-        return new LighStepHttpSpanExtractor();
-    }
+  @Bean
+  public HttpSpanExtractor lightStepHttpSpanExtractor() {
+    return new LighStepHttpSpanExtractor();
+  }
 
 }
