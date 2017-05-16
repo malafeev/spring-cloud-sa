@@ -2,10 +2,14 @@ package com.lightstep;
 
 
 import com.lightstep.tracer.shared.SpanBuilder;
+import com.lightstep.tracer.shared.SpanContext;
 import io.opentracing.Tracer;
+import io.opentracing.tag.Tags;
 import java.net.MalformedURLException;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.sleuth.Log;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.SpanReporter;
 
@@ -14,9 +18,11 @@ public class LightStepSpanReporter implements SpanReporter {
   private static final Logger logger = LoggerFactory.getLogger(LightStepConfiguration.class);
 
   private final Tracer tracer;
+  private final String applicationName;
 
-  LightStepSpanReporter(Tracer tracer) {
+  LightStepSpanReporter(Tracer tracer, String applicationName) {
     this.tracer = tracer;
+    this.applicationName = applicationName;
   }
 
   /**
@@ -28,24 +34,25 @@ public class LightStepSpanReporter implements SpanReporter {
 
     lightStepSpanBuilder.withTraceIdAndSpanId(span.getTraceId(), span.getSpanId());
 
-        /*if (!span.getParents().isEmpty()) {
-            lighStepSpanBuilder.asChildOf(new SpanContext(span.getTraceId(), span.getParents().get(0)));
-        }*/
+    if (!span.getParents().isEmpty()) {
+      lightStepSpanBuilder.asChildOf(new SpanContext(span.getTraceId(), span.getParents().get(0)));
+    }
     com.lightstep.tracer.shared.Span lightStepSpan = (com.lightstep.tracer.shared.Span) lightStepSpanBuilder
         .start();
 
-        /*for (Map.Entry<String, String> entry : span.baggageItems()) {
-            lightStepSpan.setBaggageItem(entry.getKey(), entry.getValue());
-        }
+    for (Map.Entry<String, String> entry : span.baggageItems()) {
+      lightStepSpan.setBaggageItem(entry.getKey(), entry.getValue());
+    }
 
-        for (Log log : span.logs()) {
-            lightStepSpan.log(log.getTimestamp(), log.getEvent());
-        }
+    for (Log log : span.logs()) {
+      lightStepSpan.log(log.getTimestamp(), log.getEvent());
+    }
 
-        for (Map.Entry<String, String> entry : span.tags().entrySet()) {
-            lightStepSpan.setTag(entry.getKey(), entry.getValue());
-        }
-        */
+    for (Map.Entry<String, String> entry : span.tags().entrySet()) {
+      lightStepSpan.setTag(entry.getKey(), entry.getValue());
+    }
+
+    lightStepSpan.setTag(Tags.COMPONENT.getKey(), applicationName);
 
     lightStepSpan.finish(span.getEnd() * 1000L);
 

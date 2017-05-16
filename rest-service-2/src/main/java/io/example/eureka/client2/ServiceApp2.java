@@ -22,21 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Import(LightStepConfiguration.class)
 public class ServiceApp2 {
 
-    private final StoreClient storeClient;
+  private final StoreClient storeClient;
 
-    @Autowired
-    public ServiceApp2(StoreClient storeClient) {
-        this.storeClient = storeClient;
-    }
+  @Autowired
+  public ServiceApp2(StoreClient storeClient) {
+    this.storeClient = storeClient;
+  }
 
-    @RequestMapping("/")
-    public String home() {
-        return storeClient.get();
-    }
+  @RequestMapping("/")
+  public String home() {
+    return storeClient.get();
+  }
 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(ServiceApp2.class).web(true).run(args);
-    }
+  public static void main(String[] args) {
+    new SpringApplicationBuilder(ServiceApp2.class).web(true).run(args);
+  }
 
 
 }

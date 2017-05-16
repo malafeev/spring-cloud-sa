@@ -21,6 +21,9 @@ public class LightStepConfiguration {
 
   private static final Logger logger = LoggerFactory.getLogger(LightStepConfiguration.class);
 
+  @Value("${spring.application.name}")
+  private String applicationName;
+
   @Value("${lightstep.access_token}")
   private String accessToken;
 
@@ -58,7 +61,7 @@ public class LightStepConfiguration {
 
   @Bean
   public SpanReporter spanReporter() {
-    return new LightStepSpanReporter(lightStepTracer());
+    return new LightStepSpanReporter(lightStepTracer(), applicationName);
   }
 
   @Bean
