@@ -42,9 +42,9 @@ public class ServiceApp2 {
     return storeClient.get();
   }
 
-  @GetMapping("/home")
+  @GetMapping("/headers")
   public String home() {
-    return restTemplate.getForObject("http://rest-service-1/home", String.class);
+    return restTemplate.getForObject("http://rest-service-1/headers", String.class);
   }
 
   public static void main(String[] args) {

@@ -7,6 +7,6 @@ public class StoreClientFallback implements StoreClient {
 
     @Override
     public String get() {
-        return "FAILED";
+        return "Fallback";
     }
 }
