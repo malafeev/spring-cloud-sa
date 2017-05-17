@@ -3,6 +3,7 @@ package com.lightstep;
 import com.lightstep.tracer.jre.JRETracer;
 import io.opentracing.Tracer;
 import java.net.MalformedURLException;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,7 @@ import org.springframework.cloud.sleuth.Sampler;
 import org.springframework.cloud.sleuth.SpanReporter;
 import org.springframework.cloud.sleuth.instrument.web.HttpSpanExtractor;
 import org.springframework.cloud.sleuth.instrument.web.HttpSpanInjector;
+import org.springframework.cloud.sleuth.instrument.web.SleuthWebProperties;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,7 +77,8 @@ public class LightStepConfiguration {
 
   @Bean
   public HttpSpanExtractor lightStepHttpSpanExtractor() {
-    return new LightStepHttpSpanExtractor();
+    return new LightStepHttpSpanExtractor(
+        Pattern.compile(SleuthWebProperties.DEFAULT_SKIP_PATTERN));
   }
 
 }

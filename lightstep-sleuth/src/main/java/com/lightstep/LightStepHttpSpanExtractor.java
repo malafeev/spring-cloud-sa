@@ -1,53 +1,40 @@
 package com.lightstep;
 
-import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.SpanTextMap;
-import org.springframework.cloud.sleuth.instrument.web.HttpSpanExtractor;
+import org.springframework.cloud.sleuth.instrument.web.ZipkinHttpSpanExtractor;
 import org.springframework.cloud.sleuth.util.TextMapUtil;
-import org.springframework.util.StringUtils;
 
 
-public class LightStepHttpSpanExtractor implements HttpSpanExtractor {
+public class LightStepHttpSpanExtractor extends ZipkinHttpSpanExtractor {
+
+  public LightStepHttpSpanExtractor(Pattern skipPattern) {
+    super(skipPattern);
+  }
 
   @Override
   public Span joinTrace(SpanTextMap textMap) {
     Map<String, String> carrier = TextMapUtil.asMap(textMap);
 
-    if (!carrier.containsKey("ot-tracer-spanid") || !carrier.containsKey("ot-tracer-traceid")) {
+    String traceId = carrier.get("ot-tracer-traceid");
+    String spanId = carrier.get("ot-tracer-spanid");
+
+    if (traceId == null || spanId == null) {
       return null;
     }
 
-    long traceId = unHex(carrier.get("ot-tracer-traceid"));
-    long spanId = unHex(carrier.get("ot-tracer-spanid"));
-    String name = carrier.get(Span.SPAN_NAME_NAME);
-
-    Map<String, String> decodedBaggage = new HashMap<>();
+    textMap.put(Span.TRACE_ID_NAME, traceId);
+    textMap.put(Span.SPAN_ID_NAME, spanId);
 
     for (Map.Entry<String, String> entry : textMap) {
       if (entry.getKey().startsWith("ot-baggage-")) {
-        decodedBaggage.put(entry.getKey().substring("ot-baggage-".length()), entry.getValue());
+        textMap.put(entry.getKey().replace("ot-baggage", Span.SPAN_BAGGAGE_HEADER_PREFIX),
+            entry.getValue());
       }
     }
 
-    Span.SpanBuilder builder = Span.builder().name(name).traceId(traceId).spanId(spanId)
-        .baggage(decodedBaggage);
-
-    if (carrier.containsKey(Span.PARENT_ID_NAME)) {
-      builder.parent(Span.hexToId(carrier.get(Span.PARENT_ID_NAME)));
-    }
-
-    String processId = carrier.get(Span.PROCESS_ID_NAME);
-    if (StringUtils.hasText(processId)) {
-      builder.processId(processId);
-    }
-
-    return builder.build();
-  }
-
-  private static long unHex(String hexString) throws NumberFormatException {
-    return new BigInteger(hexString, 16).longValue();
+    return super.joinTrace(textMap);
   }
 }
