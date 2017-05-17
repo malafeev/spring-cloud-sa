@@ -7,9 +7,10 @@ import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.SpanTextMap;
 import org.springframework.cloud.sleuth.instrument.web.HttpSpanExtractor;
 import org.springframework.cloud.sleuth.util.TextMapUtil;
+import org.springframework.util.StringUtils;
 
 
-public class LighStepHttpSpanExtractor implements HttpSpanExtractor {
+public class LightStepHttpSpanExtractor implements HttpSpanExtractor {
 
   @Override
   public Span joinTrace(SpanTextMap textMap) {
@@ -21,6 +22,7 @@ public class LighStepHttpSpanExtractor implements HttpSpanExtractor {
 
     long traceId = unHex(carrier.get("ot-tracer-traceid"));
     long spanId = unHex(carrier.get("ot-tracer-spanid"));
+    String name = carrier.get(Span.SPAN_NAME_NAME);
 
     Map<String, String> decodedBaggage = new HashMap<>();
 
@@ -30,8 +32,18 @@ public class LighStepHttpSpanExtractor implements HttpSpanExtractor {
       }
     }
 
-    Span.SpanBuilder builder = Span.builder().traceId(traceId).spanId(spanId)
+    Span.SpanBuilder builder = Span.builder().name(name).traceId(traceId).spanId(spanId)
         .baggage(decodedBaggage);
+
+    if (carrier.containsKey(Span.PARENT_ID_NAME)) {
+      builder.parent(Span.hexToId(carrier.get(Span.PARENT_ID_NAME)));
+    }
+
+    String processId = carrier.get(Span.PROCESS_ID_NAME);
+    if (StringUtils.hasText(processId)) {
+      builder.processId(processId);
+    }
+
     return builder.build();
   }
 

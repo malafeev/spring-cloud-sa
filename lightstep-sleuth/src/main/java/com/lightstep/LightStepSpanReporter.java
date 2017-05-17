@@ -45,11 +45,13 @@ public class LightStepSpanReporter implements SpanReporter {
     }
 
     for (Log log : span.logs()) {
-      lightStepSpan.log(log.getTimestamp(), log.getEvent());
+      lightStepSpan.log(log.getTimestamp() * 1000L, log.getEvent());
+      //System.out.println("LOG: " + log.getEvent());
     }
 
     for (Map.Entry<String, String> entry : span.tags().entrySet()) {
       lightStepSpan.setTag(entry.getKey(), entry.getValue());
+      //System.out.println(entry.getKey() + ":" + entry.getValue());
     }
 
     lightStepSpan.setTag(Tags.COMPONENT.getKey(), applicationName);

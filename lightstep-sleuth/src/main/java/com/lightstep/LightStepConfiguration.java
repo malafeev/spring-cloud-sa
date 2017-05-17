@@ -21,7 +21,7 @@ public class LightStepConfiguration {
 
   private static final Logger logger = LoggerFactory.getLogger(LightStepConfiguration.class);
 
-  @Value("${spring.application.name}")
+  @Value("${spring.application.name:unknown}")
   private String applicationName;
 
   @Value("${lightstep.access_token}")
@@ -36,6 +36,9 @@ public class LightStepConfiguration {
   @Value("${lightstep.collector_port}")
   private int port;
 
+  @Value("${lightstep.disable.report:false}")
+  private boolean disableReport;
+
   @Bean
   public Tracer lightStepTracer() {
     try {
@@ -45,6 +48,7 @@ public class LightStepConfiguration {
               .withComponentName(componentName)
               .withCollectorHost(host)
               .withCollectorPort(port)
+              .withDisableReportingLoop(disableReport)
               .build()
       );
     } catch (MalformedURLException e) {
@@ -71,7 +75,7 @@ public class LightStepConfiguration {
 
   @Bean
   public HttpSpanExtractor lightStepHttpSpanExtractor() {
-    return new LighStepHttpSpanExtractor();
+    return new LightStepHttpSpanExtractor();
   }
 
 }
