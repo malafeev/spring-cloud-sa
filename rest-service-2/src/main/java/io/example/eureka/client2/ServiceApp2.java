@@ -1,7 +1,11 @@
 package io.example.eureka.client2;
 
 
-import com.lightstep.LightStepConfiguration;
+import io.opentracing.Tracer;
+import io.opentracing.cloud.OpentracingCloudConfiguration;
+import io.opentracing.contrib.spring.web.client.TracingRestTemplateInterceptor;
+import io.opentracing.mock.MockTracer;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients
 @EnableEurekaClient
 @RestController
-@Import(LightStepConfiguration.class)
+@Import(OpentracingCloudConfiguration.class)
 @SpringBootApplication
 public class ServiceApp2 {
 
@@ -31,15 +35,29 @@ public class ServiceApp2 {
   @Bean
   @LoadBalanced
   public RestTemplate restTemplate() {
-    return new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate();
+    return restTemplate;
+  }
+
+  @PostConstruct
+  public void addRestTemplateInterceptor() {
+    restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(tracer));
   }
 
   @Autowired
   private RestTemplate restTemplate;
 
+  @Autowired
+  private Tracer tracer;
+
   @GetMapping("/")
   public String index() {
-    return storeClient.get();
+    String s = storeClient.get();
+
+    MockTracer mockTracer = (MockTracer) tracer;
+
+    System.out.println(mockTracer.finishedSpans().size());
+    return s;
   }
 
   @GetMapping("/headers")

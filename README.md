@@ -1,6 +1,6 @@
-# Spring Cloud OpenTracing (LightStep) Instrumentation Example
+# Spring Cloud OpenTracing  Instrumentation Example
 
-OpenTracing (LightStep) instrumentation for Spring Cloud based on  Spring Cloud Sleuth
+OpenTracing  instrumentation for Spring Cloud
 
 Example consists of:
 - Eureka Server
@@ -14,13 +14,7 @@ and Client Side Load Balancer (Ribbon)
 
 ## Configuration
 
-Define next properties:
-```properties
-lightstep.access_token=access key
-lightstep.component_name=spring-cloud
-lightstep.collector_host=collector-grpc.lightstep.com
-lightstep.collector_port=443
-```
+
 
 ## Usage
 
