@@ -1,7 +1,6 @@
 package io.example.eureka.client;
 
 
-import io.opentracing.ActiveSpan;
 import io.opentracing.Tracer;
 import io.opentracing.cloud.OpentracingCloudConfiguration;
 import java.util.HashMap;
@@ -16,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 @EnableEurekaClient
 @RestController
@@ -28,20 +29,22 @@ public class ServiceApp {
 
   @GetMapping("/")
   public String index(@RequestHeader HttpHeaders headers) {
+    return "Hello from Service 1";
+  }
 
-    /*Observable observable = Observable.range(1, 8)
-        //.subscribeOn(Schedulers.io())
-        //.observeOn(Schedulers.io())
+  @GetMapping("rx")
+  public String rxJava() {
+    Observable observable = Observable.range(1, 8)
+        .subscribeOn(Schedulers.io())
+        .observeOn(Schedulers.io())
         .map(integer -> integer * 2)
         .filter(integer -> integer % 2 == 0);
 
     observable.subscribe(o -> {
       System.out.println(o + " " + Thread.currentThread().getName());
-    });*/
+    });
 
-    ActiveSpan activeSpan = tracer.activeSpan();
-
-    return "Hello from Service 1";
+    return "rx";
   }
 
   @GetMapping("/headers")

@@ -26,7 +26,7 @@
     <dependency>
       <groupId>io.opentracing.contrib</groupId>
       <artifactId>opentracing-spring-web-autoconfigure</artifactId>
-      <version>0.0.5</version>
+      <version>0.0.6</version>
     </dependency>
 
     <dependency>
@@ -42,9 +42,15 @@
     </dependency>
 
     <dependency>
+      <groupId>io.opentracing.contrib</groupId>
+      <artifactId>opentracing-rxjava-1</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.lightstep.tracer</groupId>
       <artifactId>lightstep-tracer-jre</artifactId>
-      <version>0.12.4</version>
+      <version>0.12.5</version>
     </dependency>
 
     <dependency>
