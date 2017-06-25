@@ -39,25 +39,20 @@ public class ServiceApp2 {
     return restTemplate;
   }
 
-  @PostConstruct
-  public void addRestTemplateInterceptor() {
-    restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(tracer));
-  }
-
   @Autowired
   private RestTemplate restTemplate;
 
   @Autowired
   private Tracer tracer;
 
+  @PostConstruct
+  public void addRestTemplateInterceptor() {
+    restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(tracer));
+  }
+
   @GetMapping("/")
   public String index() {
-    String s = storeClient.get();
-
-    MockTracer mockTracer = (MockTracer) tracer;
-
-    System.out.println(mockTracer.finishedSpans().size());
-    return s;
+    return storeClient.get();
   }
 
   @GetMapping("/headers")
