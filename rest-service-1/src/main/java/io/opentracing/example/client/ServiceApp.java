@@ -1,15 +1,13 @@
-package io.example.eureka.client;
+package io.opentracing.example.client;
 
 
 import io.opentracing.Tracer;
-import io.opentracing.cloud.OpentracingCloudConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,6 @@ import rx.schedulers.Schedulers;
 
 @EnableEurekaClient
 @RestController
-@Import(OpentracingCloudConfiguration.class)
 @SpringBootApplication
 public class ServiceApp {
 

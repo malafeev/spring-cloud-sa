@@ -1,8 +1,7 @@
-package io.opentracing.cloud;
+package io.opentracing.contrib.springcloud;
 
 import feign.Client;
 import feign.Feign;
-import feign.Feign.Builder;
 import feign.Retryer;
 import feign.opentracing.TracingClient;
 import feign.opentracing.hystrix.TracingConcurrencyStrategy;
@@ -49,17 +48,3 @@ public class TracingFeignClientAutoConfiguration {
 }
 
 
-class TracingBuilder extends Builder {
-
-  private final Tracer tracer;
-
-  TracingBuilder(Tracer tracer) {
-    this.tracer = tracer;
-  }
-
-  @Override
-  public Builder client(Client client) {
-    super.client(new TracingClient(client, tracer));
-    return this;
-  }
-}

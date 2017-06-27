@@ -1,4 +1,4 @@
-package io.example.eureka.client2;
+package io.opentracing.example.client2;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.stereotype.Component;

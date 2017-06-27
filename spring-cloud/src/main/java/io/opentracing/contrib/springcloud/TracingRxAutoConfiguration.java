@@ -1,4 +1,4 @@
-package io.opentracing.cloud;
+package io.opentracing.contrib.springcloud;
 
 import io.opentracing.Tracer;
 import io.opentracing.rxjava.TracingRxJavaUtils;

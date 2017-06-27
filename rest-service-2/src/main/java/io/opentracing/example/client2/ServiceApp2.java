@@ -1,10 +1,8 @@
-package io.example.eureka.client2;
+package io.opentracing.example.client2;
 
 
 import io.opentracing.Tracer;
-import io.opentracing.cloud.OpentracingCloudConfiguration;
 import io.opentracing.contrib.spring.web.client.TracingRestTemplateInterceptor;
-import io.opentracing.mock.MockTracer;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +11,6 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients
 @EnableEurekaClient
 @RestController
-@Import(OpentracingCloudConfiguration.class)
 @SpringBootApplication
 public class ServiceApp2 {
 
