@@ -1,10 +1,10 @@
 package io.opentracing.example.client;
 
 
-import io.opentracing.Tracer;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -21,8 +21,7 @@ import rx.schedulers.Schedulers;
 @SpringBootApplication
 public class ServiceApp {
 
-  @Autowired
-  private Tracer tracer;
+  private static final Logger logger = LoggerFactory.getLogger(ServiceApp.class);
 
   @GetMapping("/")
   public String index(@RequestHeader HttpHeaders headers) {
@@ -37,9 +36,7 @@ public class ServiceApp {
         .map(integer -> integer * 2)
         .filter(integer -> integer % 2 == 0);
 
-    observable.subscribe(o -> {
-      System.out.println(o + " " + Thread.currentThread().getName());
-    });
+    observable.subscribe(o -> logger.info("{}", o));
 
     return "rx";
   }
