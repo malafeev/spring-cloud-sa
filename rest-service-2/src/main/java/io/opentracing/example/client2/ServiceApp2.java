@@ -1,9 +1,15 @@
 package io.opentracing.example.client2;
 
 
+import com.lightstep.tracer.jre.JRETracer;
+import com.lightstep.tracer.shared.Options.OptionsBuilder;
+import io.opentracing.NoopTracerFactory;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.spring.web.client.TracingRestTemplateInterceptor;
+import java.net.MalformedURLException;
 import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -21,11 +27,28 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class ServiceApp2 {
 
+  private static final Logger logger = LoggerFactory.getLogger(ServiceApp2.class);
+
   private final StoreClient storeClient;
 
   @Autowired
   public ServiceApp2(StoreClient storeClient) {
     this.storeClient = storeClient;
+  }
+
+  @Bean
+  public Tracer lightStepTracer() {
+    try {
+      return new JRETracer(
+          new OptionsBuilder()
+              .withAccessToken("bla-bla-bla")
+              .withComponentName("spring-cloud")
+              .build()
+      );
+    } catch (Exception e) {
+      logger.error("Failed to init tracer", e);
+    }
+    return NoopTracerFactory.create();
   }
 
   @Bean
@@ -43,6 +66,7 @@ public class ServiceApp2 {
 
   @PostConstruct
   public void addRestTemplateInterceptor() {
+    // We need manually add tracing interceptor because of @LoadBalanced RestTemplate
     restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(tracer));
   }
 

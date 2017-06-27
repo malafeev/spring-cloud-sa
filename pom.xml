@@ -101,6 +101,12 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>com.lightstep.tracer</groupId>
+      <artifactId>lightstep-tracer-jre</artifactId>
+      <version>0.12.5</version>
+    </dependency>
+
     <!--dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-sleuth</artifactId>
