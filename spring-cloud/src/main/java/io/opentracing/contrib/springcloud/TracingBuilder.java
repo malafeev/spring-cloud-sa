@@ -6,7 +6,7 @@ import feign.opentracing.TracingClient;
 import io.opentracing.Tracer;
 
 
-public class TracingBuilder extends Builder {
+class TracingBuilder extends Builder {
 
   private final Tracer tracer;
 

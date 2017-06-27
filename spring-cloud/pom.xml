@@ -12,6 +12,11 @@
   <artifactId>spring-cloud</artifactId>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    
     <opentracing.version>0.30.0</opentracing.version>
   </properties>
 
@@ -19,7 +24,7 @@
   <dependencies>
     <dependency>
       <groupId>io.opentracing</groupId>
-      <artifactId>opentracing-util</artifactId>
+      <artifactId>opentracing-api</artifactId>
       <version>${opentracing.version}</version>
     </dependency>
 
@@ -47,17 +52,6 @@
       <version>0.0.1</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.lightstep.tracer</groupId>
-      <artifactId>lightstep-tracer-jre</artifactId>
-      <version>0.12.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.opentracing</groupId>
-      <artifactId>opentracing-mock</artifactId>
-      <version>${opentracing.version}</version>
-    </dependency>
   </dependencies>
 
 </project>
