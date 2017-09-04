@@ -6,7 +6,6 @@ import com.lightstep.tracer.shared.Options.OptionsBuilder;
 import io.opentracing.NoopTracerFactory;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.spring.web.client.TracingRestTemplateInterceptor;
-import java.net.MalformedURLException;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +60,10 @@ public class ServiceApp2 {
   @Autowired
   private RestTemplate restTemplate;
 
-  @Autowired
-  private Tracer tracer;
-
   @PostConstruct
   public void addRestTemplateInterceptor() {
     // We need manually add tracing interceptor because of @LoadBalanced RestTemplate
-    restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(tracer));
+    restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(lightStepTracer()));
   }
 
   @GetMapping("/")
