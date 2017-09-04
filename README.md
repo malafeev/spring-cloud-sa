@@ -12,7 +12,6 @@ Rest services are registered in Eureka on startup.
 _Service 2_ make rest request to _Service 1_ via Feign client which uses Service Discovery, Circuit Breaker (Hystrix) 
 and Client Side Load Balancer (Ribbon)
 
-Module `spring-cloud` contains auto configurations for Spring Web, Feign and RxJava.
 
 ## Configuration
 
