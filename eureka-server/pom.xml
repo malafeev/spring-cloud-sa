@@ -9,19 +9,12 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-
   <artifactId>eureka-server</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-eureka-server</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>spring-cloud</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
