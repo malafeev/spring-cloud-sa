@@ -45,3 +45,18 @@ Make HTTP Request to Service 2:
 ```bash
 curl http://localhost:8082/
 ```
+
+## Problem with LightStep tracer
+
+Because LightStep tracer depends on `grpc-netty`: 
+
+```java
+
+java.lang.IllegalArgumentException: Jetty ALPN/NPN has not been properly configured.
+	at io.grpc.netty.GrpcSslContexts.selectApplicationProtocolConfig(GrpcSslContexts.java:174) ~[grpc-netty-1.4.0.jar!/:1.4.0]
+	at io.grpc.netty.GrpcSslContexts.configure(GrpcSslContexts.java:151) ~[grpc-netty-1.4.0.jar!/:1.4.0]
+	at io.grpc.netty.GrpcSslContexts.configure(GrpcSslContexts.java:139) ~[grpc-netty-1.4.0.jar!/:1.4.0]
+	at io.grpc.netty.GrpcSslContexts.forClient(GrpcSslContexts.java:109) ~[grpc-netty-1.4.0.jar!/:1.4.0]
+
+
+```
