@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.opentracing.contrib.springcloud.TracingRxAutoConfiguration,\
-  io.opentracing.contrib.springcloud.TracingFeignClientAutoConfiguration
