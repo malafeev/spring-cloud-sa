@@ -31,6 +31,9 @@ Start Eureka
 java -jar eureka-server/target/eureka-server-0.0.1-SNAPSHOT.jar
 ```
 
+Access Eureka: `http://localhost:8761/`
+
+
 Start Rest Service 1
 ```bash
 java -jar rest-service-1/target/rest-service-1-0.0.1-SNAPSHOT.jar

@@ -1,10 +1,9 @@
 package io.opentracing.example.client;
 
 
-import com.lightstep.tracer.jre.JRETracer;
-import com.lightstep.tracer.shared.Options.OptionsBuilder;
-import io.opentracing.NoopTracerFactory;
+import brave.sampler.Sampler;
 import io.opentracing.Tracer;
+import io.opentracing.mock.MockTracer;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import zipkin2.Span;
+import zipkin2.reporter.Reporter;
 
 @EnableEurekaClient
 @RestController
@@ -27,20 +28,26 @@ import rx.schedulers.Schedulers;
 public class ServiceApp {
 
   private static final Logger logger = LoggerFactory.getLogger(ServiceApp.class);
+  private final MockTracer tracer = new MockTracer();
 
   @Bean
-  public Tracer lightStepTracer() {
-    try {
-      return new JRETracer(
-          new OptionsBuilder()
-              .withAccessToken("bla-bla-bla")
-              .withComponentName("spring-cloud")
-              .build()
-      );
-    } catch (Exception e) {
-      logger.error("Failed to init tracer", e);
-    }
-    return NoopTracerFactory.create();
+  public Tracer tracer() {
+//    try {
+//      return new JRETracer(
+//          new OptionsBuilder()
+//              .withAccessToken("bla-bla-bla")
+//              .withComponentName("spring-cloud")
+//              .build()
+//      );
+//    } catch (Exception e) {
+//      logger.error("Failed to init tracer", e);
+//    }
+    return tracer;
+  }
+
+  @Bean
+  public Sampler sleuthTraceSampler() {
+    return Sampler.ALWAYS_SAMPLE;
   }
 
   @GetMapping("/")
@@ -66,6 +73,16 @@ public class ServiceApp {
     Map<String, String> map = new HashMap<>();
     headers.toSingleValueMap().forEach(map::put);
     return ResponseEntity.ok(map);
+  }
+
+  @Bean
+  public Reporter<Span> reporter() {
+    return Reporter.CONSOLE;
+  }
+
+  @GetMapping("/traces")
+  public ResponseEntity<?> traces() {
+    return ResponseEntity.ok(((MockTracer) tracer()).finishedSpans());
   }
 
   public static void main(String[] args) {
