@@ -1,35 +1,35 @@
 package io.opentracing.example.client;
 
 
-import brave.sampler.Sampler;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rx.Observable;
 import rx.schedulers.Schedulers;
-import zipkin2.Span;
-import zipkin2.reporter.Reporter;
 
 @EnableEurekaClient
 @RestController
 @SpringBootApplication
 public class ServiceApp {
-
   private static final Logger logger = LoggerFactory.getLogger(ServiceApp.class);
 
-  @Bean
-  public Sampler sleuthTraceSampler() {
-    return Sampler.ALWAYS_SAMPLE;
+  @Value("${message:Hello default}")
+  private String message;
+
+  @RequestMapping("/message")
+  public String getMessage() {
+    return this.message;
   }
 
   @GetMapping("/")
@@ -55,11 +55,6 @@ public class ServiceApp {
     Map<String, String> map = new HashMap<>();
     headers.toSingleValueMap().forEach(map::put);
     return ResponseEntity.ok(map);
-  }
-
-  @Bean
-  public Reporter<Span> reporter() {
-    return Reporter.CONSOLE;
   }
 
   @GetMapping("/traces")
