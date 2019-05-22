@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import rx.schedulers.Schedulers;
 @EnableEurekaClient
 @RestController
 @SpringBootApplication
+@RefreshScope
 public class ServiceApp {
   private static final Logger logger = LoggerFactory.getLogger(ServiceApp.class);
 

@@ -10,13 +10,13 @@ clean:
 
 run:
 	java \
-	    -Dls.componentName=spring-cloud-config \
-	    -Dls.collectorHost=collector.lightstep.com \
-	    -Dls.collectorProtocol=https \
-	    -Dls.collectorPort=443 \
-	    -Dls.accessToken=$(LS_TOKEN) \
-	    -Dsa.tracer=lightstep \
-		-jar target/config-0.0.1-SNAPSHOT.jar -javaagent:$(specialagent_jar)
+        -Dls.componentName=spring-cloud-config \
+        -Dls.collectorHost=localhost \
+        -Dls.collectorProtocol=http \
+        -Dls.collectorPort=8360 \
+        -Dls.accessToken=${LS_LOCAL_TOKEN} \
+        -Dsa.tracer=lightstep \
+        -javaagent:$(specialagent_jar) -jar target/config-0.0.1-SNAPSHOT.jar
 
 run-no-agent:
 	java -jar target/config-0.0.1-SNAPSHOT.jar
