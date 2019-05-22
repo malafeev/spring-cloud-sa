@@ -2,8 +2,6 @@ package io.opentracing.example.client;
 
 
 import brave.sampler.Sampler;
-import io.opentracing.Tracer;
-import io.opentracing.mock.MockTracer;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -28,22 +26,6 @@ import zipkin2.reporter.Reporter;
 public class ServiceApp {
 
   private static final Logger logger = LoggerFactory.getLogger(ServiceApp.class);
-  private final MockTracer tracer = new MockTracer();
-
-  @Bean
-  public Tracer tracer() {
-//    try {
-//      return new JRETracer(
-//          new OptionsBuilder()
-//              .withAccessToken("bla-bla-bla")
-//              .withComponentName("spring-cloud")
-//              .build()
-//      );
-//    } catch (Exception e) {
-//      logger.error("Failed to init tracer", e);
-//    }
-    return tracer;
-  }
 
   @Bean
   public Sampler sleuthTraceSampler() {
@@ -82,10 +64,10 @@ public class ServiceApp {
 
   @GetMapping("/traces")
   public ResponseEntity<?> traces() {
-    return ResponseEntity.ok(((MockTracer) tracer()).finishedSpans());
+    return ResponseEntity.ok().build();
   }
 
   public static void main(String[] args) {
-    new SpringApplicationBuilder(ServiceApp.class).web(true).run(args);
+    new SpringApplicationBuilder(ServiceApp.class).run(args);
   }
 }

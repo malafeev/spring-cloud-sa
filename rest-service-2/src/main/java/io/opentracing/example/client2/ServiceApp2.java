@@ -1,9 +1,6 @@
 package io.opentracing.example.client2;
 
 
-import io.opentracing.Tracer;
-import io.opentracing.mock.MockTracer;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +30,6 @@ public class ServiceApp2 {
   }
 
   @Bean
-  public Tracer lightStepTracer() {
-//    try {
-//      return new JRETracer(
-//          new OptionsBuilder()
-//              .withAccessToken("bla-bla-bla")
-//              .withComponentName("spring-cloud")
-//              .build()
-//      );
-//    } catch (Exception e) {
-//      logger.error("Failed to init tracer", e);
-//    }
-    return new MockTracer();
-  }
-
-  @Bean
   @LoadBalanced
   public RestTemplate restTemplate() {
     RestTemplate restTemplate = new RestTemplate();
@@ -56,12 +38,6 @@ public class ServiceApp2 {
 
   @Autowired
   private RestTemplate restTemplate;
-
-  @PostConstruct
-  public void addRestTemplateInterceptor() {
-    // We need manually add tracing interceptor because of @LoadBalanced RestTemplate
-    //restTemplate.getInterceptors().add(new TracingRestTemplateInterceptor(lightStepTracer()));
-  }
 
   @GetMapping("/")
   public String index() {
@@ -74,6 +50,6 @@ public class ServiceApp2 {
   }
 
   public static void main(String[] args) {
-    new SpringApplicationBuilder(ServiceApp2.class).web(true).run(args);
+    new SpringApplicationBuilder(ServiceApp2.class).run(args);
   }
 }
