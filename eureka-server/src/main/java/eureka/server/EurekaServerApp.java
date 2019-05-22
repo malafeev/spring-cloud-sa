@@ -1,4 +1,4 @@
-package io.opentracing.example.eureka.server;
+package eureka.server;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

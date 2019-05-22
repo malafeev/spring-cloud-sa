@@ -1,4 +1,4 @@
-package io.opentracing.example.client2;
+package client2;
 
 
 import org.slf4j.Logger;

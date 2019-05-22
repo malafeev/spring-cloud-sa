@@ -14,6 +14,7 @@
     <module>rest-service-1</module>
     <module>rest-service-2</module>
     <module>config</module>
+    <module>zuul</module>
   </modules>
 
   <parent>

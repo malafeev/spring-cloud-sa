@@ -1,4 +1,4 @@
-package io.opentracing.example.client2;
+package client2;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;

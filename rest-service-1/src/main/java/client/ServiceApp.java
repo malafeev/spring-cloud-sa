@@ -1,4 +1,4 @@
-package io.opentracing.example.client;
+package client;
 
 
 import java.util.HashMap;
