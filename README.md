@@ -1,11 +1,12 @@
-# Spring Cloud OpenTracing  Instrumentation Example
+# Spring Cloud Sample Application to test with SpecialAgent
 
-OpenTracing  instrumentation for Spring Cloud
 
 Example consists of:
 - Eureka Server
 - Rest Service 1
 - Rest Service 2
+- Config server
+- Zuul proxy
 
 Rest services are registered in Eureka on startup.
 
